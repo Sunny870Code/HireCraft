@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 
 
 const Register = () => {
+    const [formData,setFormData] = useState({
+        username:"",
+        email:"",
+        password:""
+    });
+
+    const handleChange = (e) =>{
+        setFormData({
+            ...formData,
+            [e.target.name] : e.target.value,
+        });
+    }
 
 
     return (
@@ -26,6 +38,10 @@ const Register = () => {
                                     Username
                                 </label>
                                 <input type="text"
+                                    name="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    required
                                     placeholder="Enter your name"
                                     className="border px-2 py-1.5 rounded-xl text-sm" />
 
@@ -33,6 +49,10 @@ const Register = () => {
                                     Email
                                 </label>
                                 <input type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
                                     placeholder="Enter email"
                                     className="border px-2 py-1.5 rounded-xl text-sm" />
 
@@ -40,6 +60,10 @@ const Register = () => {
                                     Password
                                 </label>
                                 <input type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
                                     placeholder="Enter password"
                                     className="border px-2 py-1.5 rounded-xl text-sm mb-4" />
 

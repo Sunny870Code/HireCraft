@@ -1,6 +1,19 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const LogIn = () => {
+
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    })
+
+    const handleChange = (e) =>{
+        setFormData({
+            ...formData,
+            [e.target.name] : e.target.value,
+        })
+    }
 
     return (
         <main>
@@ -23,6 +36,10 @@ const LogIn = () => {
                                     Email
                                 </label>
                                 <input type="email"
+                                    name="email"
+                                    onChange={handleChange}
+                                    value={formData.email}
+                                    required
                                     placeholder="Enter email"
                                     className="border px-2 py-1.5 rounded-xl text-sm" />
 
@@ -30,6 +47,10 @@ const LogIn = () => {
                                     Password
                                 </label>
                                 <input type="password"
+                                    name="password"
+                                    onChange={handleChange}
+                                    value={formData.password}
+                                    required
                                     placeholder="Enter password"
                                     className="border px-2 py-1.5 rounded-xl text-sm mb-4" />
 
