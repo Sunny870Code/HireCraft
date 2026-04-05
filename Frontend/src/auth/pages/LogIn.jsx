@@ -1,18 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LogIn = () => {
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     })
 
-    const handleChange = (e) =>{
+    const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name] : e.target.value,
+            [e.target.name]: e.target.value,
         })
+    }
+
+    const handleSubmit =(e)=>{
+        e.preventDefault();
+        
     }
 
     return (
@@ -66,6 +72,8 @@ const LogIn = () => {
                                     LogIn
                                 </button>
                             </form>
+                            <p className="mt-6 text-sm ">Create a new account?<Link to={"/register"} className="text-[#546B41] font-semibold hover:underline "> Register</Link> </p>
+
                         </div>
                     </div>
 

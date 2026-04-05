@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Register = () => {
+
+    const navigate = useNavigate();
+
     const [formData,setFormData] = useState({
         username:"",
         email:"",
@@ -75,10 +78,11 @@ const Register = () => {
 
                                 <button
                                     type="submit"
-                                    className="bg-[#546B41]  p-3 mt-4 rounded-2xl text-[#FFF8EC]">
+                                    className="bg-[#546B41]  p-3 mt-4 rounded-2xl text-[#FFF8EC] active:scale-95">
                                     Register
                                 </button>
                             </form>
+                            <p className="mt-6 text-sm ">Alreadt have an account?<Link to={"/login"} className="text-[#546B41] font-semibold hover:underline "> LogIn</Link> </p>
                         </div>
                     </div>
 
