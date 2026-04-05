@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 
 const Register = () => {
+    const [name,setname] = useState("");
 
     return (
         <main>
