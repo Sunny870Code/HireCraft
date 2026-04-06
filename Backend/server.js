@@ -1,7 +1,7 @@
 require("dotenv").config()
 const app = require("./src/app")
 const connectDB = require("./src/config/database")
-import cors from "cors";
+const cors = require("cors");
 
 connectDB();
 
