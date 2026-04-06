@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const LogIn = () => {
     const navigate = useNavigate();
+
+    //using custom hook
+    const {loading , handleLogin} = useAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -16,9 +20,13 @@ const LogIn = () => {
         })
     }
 
-    const handleSubmit =(e)=>{
+    const handleSubmit =async(e)=>{
         e.preventDefault();
-        
+        await handleLogin(formData)
+    }
+
+    if(loading){
+        return (<main><h1>Loading...</h1></main>)
     }
 
     return (
@@ -36,7 +44,8 @@ const LogIn = () => {
                             </div>
                             <form
                                 className="flex flex-col gap-2"
-                                action="">
+                                action=""
+                                onSubmit={handleSubmit}>
 
                                 <label className=" text-sm">
                                     Email
