@@ -1,22 +1,36 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 
 const Register = () => {
 
     const navigate = useNavigate();
 
-    const [formData,setFormData] = useState({
-        username:"",
-        email:"",
-        password:""
+    const { loading, handleRegister } = useAuth();
+
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        password: ""
     });
 
-    const handleChange = (e) =>{
+    const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name] : e.target.value,
+            [e.target.name]: e.target.value,
         });
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await handleRegister(formData);
+
+        navigate('/')
+
+        if (loading) {
+            return (<main> <h1>Loading...</h1></main>)
+        }
     }
 
 
@@ -36,7 +50,8 @@ const Register = () => {
                             </div>
                             <form
                                 className="flex flex-col gap-2"
-                                action="">
+                                action=""
+                                onSubmit={handleSubmit}>
                                 <label className=" text-md">
                                     Username
                                 </label>

@@ -1,14 +1,13 @@
 require("dotenv").config()
 const app = require("./src/app")
 const connectDB = require("./src/config/database")
-const cors = require("cors");
+const generateInterviewReport = require("./src/services/ai.service")
+const {resume ,selfDescription, jobDescription } = require("./src/services/temp");
+
 
 connectDB();
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
-}));
+generateInterviewReport({resume, selfDescription,jobDescription})
 
 app.listen(3000,()=>{
     console.log("server is running on port 3000");

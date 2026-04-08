@@ -138,6 +138,11 @@ const logoutUserController = async(req,res) =>{
  */
 
 async function getmeController(req,res){
+    if(!req.user){
+        return res.status(401).json({
+            message:"Not authenticated"
+        });
+    }
     const user  = await userModel.findById(req.user.id)
 
     res.status(200).json({
