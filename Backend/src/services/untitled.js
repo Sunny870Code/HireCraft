@@ -1,34 +1,70 @@
 {
-  matchScore: 75,
-  technicalQuestions: [
-    '- What are the key differences between SQL and NoSQL databases, and when would you choose MongoDB over MySQL for a project?',
-    '- Explain the concept of the Virtual DOM in React.js and how it contributes to performance optimization.',
-    '- Describe the middleware concept in Express.js. Provide an example of how you might use middleware for authentication.',
-    '- You mentioned optimizing database queries. Can you elaborate on a specific instance where you optimized queries, the techniques you used, and the impact it had?',
-    '- How do you handle asynchronous operations in JavaScript, specifically in a Node.js environment? Discuss Promises and async/await.',
-    '- What is Docker and how have you used it in your projects, even if at a basic level?'
+  "matchScore": 88,
+  "technicalQuestions": [
+    {
+      "question": "In your MERN projects, how did you implement role-based access control (RBAC) in the Express backend?",
+      "intention": "To verify practical security implementation skills and understanding of middleware.",
+      "answer": "Explain creating custom middleware to check user roles from the JWT payload or database and restricting access to specific API routes accordingly."
+    },
+    {
+      "question": "How do you optimize MongoDB queries to improve application performance, as mentioned in your resume?",
+      "intention": "To assess database knowledge beyond basic CRUD operations.",
+      "answer": "Discuss the use of indexing, the aggregation framework, avoiding 'select *' by projecting only necessary fields, and using explain() to analyze query execution."
+    },
+    {
+      "question": "Can you explain the life cycle of a Socket.io connection in the context of your Chat Application?",
+      "intention": "To test real-time communication knowledge and state management.",
+      "answer": "Describe the handshake process, event emitters/listeners, joining rooms for private chats, and handling disconnections."
+    }
   ],
-  behavioralQuestion: [
-    'Tell me about a time you faced a significant technical challenge in a project. How did you approach it, and what was the outcome?',
-    'Describe a situation where you had to work closely with other developers or stakeholders. How did you ensure effective collaboration and communication?',
-    'Can you share an experience where you received feedback on your code or work? How did you respond to it, and what did you learn?',
-    'Walk me through a project from start to finish where you were responsible for both frontend and backend development. What was your biggest learning from that project?',
-    'How do you stay updated with the latest technologies and best practices in full-stack development?'
+  "behavioralQuestion": [
+    {
+      "question": "Tell me about a time you faced a significant bug in your Resume Builder project. How did you resolve it?",
+      "intention": "To evaluate problem-solving methodology and technical persistence.",
+      "answer": "Use the STAR method. Describe the bug (e.g., state sync issues), the debugging tools used (React DevTools/Postman), and the final implementation of the fix."
+    }
   ],
-  skillGap: [
-    'Testing Frameworks (e.g., Jest, React Testing Library)',
-    'CI/CD Tools (e.g., Jenkins, GitHub Actions)',
-    'Cloud Platforms (e.g., AWS, Azure, GCP)',
-    'Advanced Docker/Containerization',
-    'Deployment Strategies'
+  "skillGap": [
+    {
+      "skill": "Advanced DevOps (CI/CD pipelines)",
+      "severity": "medium"
+    },
+    {
+      "skill": "Unit/Integration Testing (Jest/Mocha)",
+      "severity": "medium"
+    },
+    {
+      "skill": "Cloud Services (AWS/Azure deployment)",
+      "severity": "low"
+    }
   ],
-  preperationPlan: [
-    'Day 1: React & JavaScript Fundamentals',
-    'Day 2: Node.js & Express.js Deep Dive',
-    'Day 3: Database & API Optimization',
-    'Day 4: System Design & Architecture',
-    'Day 5: Behavioral & Project Discussions',
-    'Day 6: Resume & Mock Interview',
-    'Day 7: Rest & Final Review'
+  "preparationPlan": [
+    {
+      "day": 1,
+      "focus": "Backend & Security Deep Dive",
+      "tasks": [
+        "Review JWT best practices and refresh tokens",
+        "Practice whiteboarding RBAC middleware logic",
+        "Revisit MongoDB indexing strategies"
+      ]
+    },
+    {
+      "day": 2,
+      "focus": "Frontend & Real-time UI",
+      "tasks": [
+        "Review React 18 hooks (useMemo, useCallback) for optimization",
+        "Refine Socket.io event handling logic",
+        "Practice explaining MERN architecture flow"
+      ]
+    },
+    {
+      "day": 3,
+      "focus": "DevOps & Testing Basics",
+      "tasks": [
+        "Learn basic Dockerizing of a MERN app",
+        "Understand the basics of a CI/CD pipeline",
+        "Practice STAR method answers for the projects listed on the resume"
+      ]
+    }
   ]
 }

@@ -27,7 +27,7 @@ const interviewReportSchema = z.object({
         severity: z.enum(["low", "medium", "high"]).describe("The severity of this skill gap , i.e. how important is this skill is low , medium , high")
     })).describe("List of skill gaps in the candidate's profile along with their severity"),
 
-    preperationPlan: z.array(z.object({
+    preparationPlan: z.array(z.object({
         day: z.number().describe("The day number in the preperation plan, starting from 1"),
         focus: z.string().describe("The main focus of this dat in the preperation plan , e.g. data structure , projects , core subjects etc.."),
         tasks: z.array(z.string()).describe("List of tasks to be done on this day to follow the preperation for the upcoiming interview or test ")
@@ -38,83 +38,75 @@ const interviewReportSchema = z.object({
 async function generateInterviewReport({ resume, selfdescription, jobdescription }) {
 
 
-    const prompt = `
-                You are an expert technical interviewer and career coach.
+const prompt = `
+You are an expert technical interviewer and career coach.
 
-                Your task is to analyze the candidate's resume, self-describe, and the job describe, and generate a detailed interview preparation report.
+Analyze the candidate's resume, self-description, and job description provided below to generate a tailored interview report.
 
-                -----------------------
-                // 📄 Candidate Resume:
-               ${resume}
+-----------------------
+Resume:
+${resume}
 
-                🧑 Candidate Self describe:
-                ${selfdescription}
+Self Description:
+${selfdescription}
 
-                💼 Job describe:
-                ${jobdescription}
-                -----------------------
+Job Description:
+${jobdescription}
+-----------------------
 
-                🎯 Instructions:
+Return ONLY valid JSON matching this structure:
 
-                1. Carefully analyze how well the candidate matches the job describe.
-                2. Generate a structured JSON response strictly following the given schema.
-                3. Do NOT include any explanation, text, or formatting outside JSON.
-                4. Keep answers practical, realistic, and helpful for interview preparation.
+{
+  "matchScore": 75,
+  "technicalQuestions": [
+    {
+      "question": "Question text here",
+      "intention": "Interviewer's goal here",
+      "answer": "Detailed answer guide here"
+    }
+  ],
+  "behavioralQuestion": [
+    {
+      "question": "Question text here",
+      "intention": "Interviewer's goal here",
+      "answer": "STAR method guide here"
+    }
+  ],
+  "skillGap": [
+    {
+      "skill": "Missing skill name",
+      "severity": "low/medium/high"
+    }
+  ],
+  "preparationPlan": [
+    {
+      "day": 1,
+      "focus": "Topic focus",
+      "tasks": ["Task 1", "Task 2"]
+    }
+  ]
+}
 
-                -----------------------
+Rules:
+- Generate real content based on the provided Resume and Job Description.
+- Output ONLY valid JSON.
+- No extra fields, no markdown backticks, and no conversational explanation.
+- The key "preparationPlan" must be spelled exactly as shown (with an 'a').
+- All arrays must contain objects as defined in the schema.
+- matchScore must be an integer between 0–100.
+`;
 
-                📊 Output Requirements:
-
-                1. matchScore:
-                - A number between 0 to 100 based on candidate-job fit.
-
-                2. technicalQuestions:
-                - Generate 4–6 relevant technical questions.
-                - Focus on skills mentioned in job describe.
-                - Include:
-                - question
-                - intention (why interviewer asks this)
-                - answer (how candidate should answer strategically)
-
-                3. behavioralQuestion:
-                - Generate 3–5 behavioral questions.
-                - Focus on real-world scenarios (teamwork, challenges, deadlines).
-
-                4. skillGap:
-                - Identify missing or weak skills compared to job describe.
-                - Assign severity:
-                - low → nice to have
-                - medium → important
-                - high → critical gap
-
-                5. preperationPlan:
-                - Create a 5–7 day preparation plan.
-                - Each day must include:
-                - day (starting from 1)
-                - focus
-                - 2–4 actionable tasks
-
-                -----------------------
-
-                ⚠️ Strict Rules:
-                - Output must be valid JSON
-                - Do NOT add extra fields
-                - Do NOT return text outside JSON
-                - Ensure all arrays are non-empty
-                - Keep answers concise but useful
-                `
-    // async function invokeGenAi() {
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
-            responseJsonSchema: zodToJsonSchema(interviewReportSchema),
+            responseSchema: zodToJsonSchema(interviewReportSchema),
         }
-    });
+    })
 
-    const report = JSON.parse(response.text);
-    console.log(report);
+
+    return JSON.parse(response.text);
 
 }
 

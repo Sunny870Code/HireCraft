@@ -56,7 +56,7 @@ const technicalQuestionSchema = new mongoose.Schema({
 })
 
 
-const behaviouralQuestionSchema = new mongoose.Schema({
+const behavioralQuestionSchema = new mongoose.Schema({
     question: {
         type: String,
         required: [true, "Technical question is requried"]
@@ -101,11 +101,7 @@ const preperationPlanSchema = new mongoose.Schema({
     },
     tasks: {
         type: String,
-        tasks: [{
-            type: String,
-            required: [true, "Tasks are requied"]
-
-        }]
+        required: [true, "Tasks are requied"]
     }
 })
 
@@ -123,16 +119,21 @@ const interviewReportSchema = new mongoose.Schema({
     selfDescription: {
         type: String,
     },
-    matchScorer: {
+    matchScore: {
         type: Number,
         min: 0,
         max: 100,
+        required:true
     },
 
     technicalQuestions: [technicalQuestionSchema],
-    behaviouralQuestion: [behaviouralQuestionSchema],
-    skillGaps: [skillgapSchema],
-    preperationPlan: [preperationPlanSchema]
+    behavioralQuestion: [behavioralQuestionSchema],
+    skillGap: [skillgapSchema],
+    preparationPlan: [preperationPlanSchema],
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"users"
+    }
 
 },
     {
@@ -142,5 +143,5 @@ const interviewReportSchema = new mongoose.Schema({
 
 const interviewReportModel = mongoose.model("InterviewReport", interviewReportSchema);
 
-module.export = interviewReportModel;
+module.exports = interviewReportModel;
 
