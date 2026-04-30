@@ -23,7 +23,7 @@ const LogIn = () => {
     const handleSubmit =async(e)=>{
         e.preventDefault();
         await handleLogin(formData);
-        navigate('/')
+        navigate('/home')
 
     }
 

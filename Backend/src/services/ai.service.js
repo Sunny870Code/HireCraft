@@ -69,7 +69,8 @@ const interviewReportSchema = z.object({
     .min(5)
     .describe(
       "Day-wise preparation plan with tasks for interview readiness."
-    )
+    ),
+  title: z.string().describe("The job title extracted from description...")
 });
 
 
@@ -158,6 +159,7 @@ ${jobdescription}
 Return ONLY valid JSON in the exact structure below.
 
 {
+  "title": "Job Title Here",
   "matchScore": 85,
   "technicalQuestions": [
     {

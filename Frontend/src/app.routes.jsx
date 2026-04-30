@@ -3,6 +3,7 @@ import Register from "./features/auth/pages/Registration";
 import LogIn from "./features/auth/pages/LogIn";
 import Protected from "./features/auth/component/Protected";
 import Home from "./features/interview/pages/Home";
+import Interview from "./features/interview/pages/Interview";
 
 
 
@@ -20,6 +21,9 @@ export const router = createBrowserRouter([
         path: "/home",
         element:
             <Home />
-       
+    },
+    {
+        path:"/main",
+        element:<Interview />
     }
 ])

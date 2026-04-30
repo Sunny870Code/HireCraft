@@ -36,8 +36,7 @@ Familiarity with authentication, database optimization, and basic DevOps practic
 The role requires problem-solving skills, teamwork, and the ability to deliver scalable applications.
 `;
 
-module.exports = {
-    resume,
-    selfDescription,
-    jobDescription
+
+
+module.exports = {resume , jobDescription ,selfDescription
 };
