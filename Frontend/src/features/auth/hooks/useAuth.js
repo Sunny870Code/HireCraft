@@ -26,9 +26,13 @@ export function useAuth() {
         setLoading(true)
         try {
             const data = await register({ username, email, password });
-            setuser(data.user);
+            if (data && data.user) {
+                setuser(data.user);
+                return data;
+            }
         } catch (err) {
-            console.log(err)
+           console.error("Registration failed:", error.data?.data || error.message);
+        return null;
         } finally {
             setLoading(false);
         }
@@ -44,22 +48,22 @@ export function useAuth() {
 
     useEffect(() => {
 
-const getAndSetUser = async () => {
-        try {
-            const data = await getMe();
-            if (data && data.user) {
-                setuser(data.user);
+        const getAndSetUser = async () => {
+            try {
+                const data = await getMe();
+                if (data && data.user) {
+                    setuser(data.user);
+                }
+            } catch (err) {
+                // 401 is normal if not logged in; just keep user as null
+                console.warn("User not authenticated");
+                setuser(null);
+            } finally {
+                setLoading(false); // Stop the spinner regardless
             }
-        } catch (err) {
-            // 401 is normal if not logged in; just keep user as null
-            console.warn("User not authenticated");
-            setuser(null); 
-        } finally {
-            setLoading(false); // Stop the spinner regardless
-        }
-    };
+        };
 
-    getAndSetUser();
+        getAndSetUser();
     }, [])
 
     return { user, loading, handleLogin, handleRegister, handleLogout }

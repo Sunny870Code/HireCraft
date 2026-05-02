@@ -4,6 +4,7 @@ import LogIn from "./features/auth/pages/LogIn";
 import Protected from "./features/auth/component/Protected";
 import Home from "./features/interview/pages/Home";
 import Interview from "./features/interview/pages/Interview";
+import MainScreen from "./features/auth/pages/MainScreen"
 
 
 
@@ -29,5 +30,9 @@ export const router = createBrowserRouter([
     {
         path:"/main",
         element:<Interview />
+    },
+    {
+        path:"/",
+        element:<MainScreen />
     }
 ])

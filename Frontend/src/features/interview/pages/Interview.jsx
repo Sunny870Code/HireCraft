@@ -1,16 +1,18 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     FileText, MessageSquare, BookOpen, AlertCircle,
     CheckCircle2, Target, Briefcase, GraduationCap, Map
 } from 'lucide-react';
 
 import { useInterview } from '../hook/useInterview';
-import { useNavigate,useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import Navbar from '../../auth/pages/Navbar';
+Navbar
 
 const InterviewDashboard = () => {
-   const [activeTab, setActiveTab] = useState('roadmap');
-    const { report, loading ,getReportById} = useInterview();
-    const {interviewId} = useParams()
+    const [activeTab, setActiveTab] = useState('roadmap');
+    const { report, loading, getReportById, getResumePdf } = useInterview();
+    const { interviewId } = useParams()
 
 
     if (loading) {
@@ -31,36 +33,43 @@ const InterviewDashboard = () => {
 
     return (
         <div className="min-h-screen flex font-sans" style={{ backgroundColor: '#FFF8EC', color: '#546B41' }}>
-
+            <Navbar />
 
             {/* LEFT MENU */}
-            <nav className="w-72 border-r border-stone-200 p-6 flex flex-col gap-2">
-                <div className="mb-10">
-                    <h2 className="text-xs uppercase tracking-widest opacity-60 font-bold mb-4">Interview Analysis</h2>
-                    <div className="flex items-center gap-2 text-xl font-bold">
-                        <Target size={24} />
-                        <span>Score: {report.matchScore}%</span>
+            <nav className="w-72 border-r border-stone-200 p-6 flex flex-col gap-2 h-screen justify-between">
+                <div>
+                    <div className="mb-10">
+                        <h2 className="text-xs uppercase tracking-widest opacity-60 font-bold mb-4">Interview Analysis</h2>
+                        <div className="flex items-center gap-2 text-xl font-bold">
+                            <Target size={24} />
+                            <span>Score: {report.matchScore}%</span>
+                        </div>
+                        <div className="w-full bg-stone-200 h-2 mt-2 rounded-full overflow-hidden">
+                            <div className="h-full bg-[#546B41]" style={{ width: `${report.matchScore}%` }}></div>
+                        </div>
                     </div>
-                    <div className="w-full bg-stone-200 h-2 mt-2 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#546B41]" style={{ width: `${report.matchScore}%` }}></div>
-                    </div>
+
+                    <button onClick={() => setActiveTab('roadmap')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'roadmap' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
+                        <Map size={20} /> <span className="font-medium text-sm">Preparation Roadmap</span>
+                    </button>
+
+                    <button onClick={() => setActiveTab('resume')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'resume' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
+                        <FileText size={20} /> <span className="font-medium text-sm">Resume & JD</span>
+                    </button>
+
+                    <button onClick={() => setActiveTab('technical')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'technical' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
+                        <BookOpen size={20} /> <span className="font-medium text-sm">Technical Questions</span>
+                    </button>
+
+                    <button onClick={() => setActiveTab('behavioral')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'behavioral' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
+                        <MessageSquare size={20} /> <span className="font-medium text-sm">Behavioral Ques.</span>
+                    </button>
                 </div>
 
-                <button onClick={() => setActiveTab('roadmap')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'roadmap' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
-                    <Map size={20} /> <span className="font-medium text-sm">Preparation Roadmap</span>
-                </button>
 
-                <button onClick={() => setActiveTab('resume')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'resume' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
-                    <FileText size={20} /> <span className="font-medium text-sm">Resume & JD</span>
-                </button>
-
-                <button onClick={() => setActiveTab('technical')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'technical' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
-                    <BookOpen size={20} /> <span className="font-medium text-sm">Technical Questions</span>
-                </button>
-
-                <button onClick={() => setActiveTab('behavioral')} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${activeTab === 'behavioral' ? 'bg-[#546B41] text-[#FFF8EC]' : 'hover:bg-stone-200'}`}>
-                    <MessageSquare size={20} /> <span className="font-medium text-sm">Behavioral Ques.</span>
-                </button>
+                <button
+                    onClick={() => { getResumePdf(report._id) }}
+                    className='bg-[#546B41] text-[#FFF8EC] px-4 py-2 rounded-2xl active:scale-95 active:cursor-pointer'>Download Resume</button>
             </nav>
 
             {/* MID CONTENT */}

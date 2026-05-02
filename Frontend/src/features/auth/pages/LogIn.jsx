@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import Navbar from "./Navbar";
 
 const LogIn = () => {
     const navigate = useNavigate();
@@ -33,6 +34,7 @@ const LogIn = () => {
 
     return (
         <main>
+            <Navbar />
             <div className="w-full min-h-screen bg-[#FFF8EC] flex items-center justify-center">
                 <div className="w-full max-w-4xl aspect-[7.5/5] flex  
              shadow-[0_20px_50px_rgba(0,0,0,0.35)] ">

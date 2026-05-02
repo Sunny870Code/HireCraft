@@ -1,79 +1,6 @@
-// import { useState } from "react"
-// import { getAllInterviewReport, generateInterviewReport, getInterviewReportById } from "../services/interview.api"
-// import { useContext, useEffect } from "react"
-// import { InterviewContext } from "../services/interview.context"
-// import { useParams } from "react-router"
-
-
-// export const useInterview = () => {
-//     const context = useContext(InterviewContext)
-//     const { interviewId } = useParams()
-
-
-//     const { loading, setLoading, report, setReport, reports, setReports } = context
-
-
-//     if (!context) {
-//         throw new Error("useInterview must be used within an InteviewProvider")
-//     }
-
-
-//     const generateReport = async ({ jobDescription, selfDescription, resume }) => {
-//         setLoading(true)
-//         try {
-//             const response = await generateInterviewReport({ jobDescription, selfDescription, resume })
-//             setReport(response.interviewReport)
-//             console.log(response.interviewReport)
-//             return response.interviewReport
-//         } catch (error) {
-//             console.log(error)
-//             return null
-//         } finally {
-//             setLoading(false)
-//         }
-//     }
-
-//     const getReportById = async (interviewId) => {
-//         setLoading(true)
-//         try {
-//             const response = await getInterviewReportById(interviewId)
-//             setReport(response)
-//         } catch (error) {
-//             console.log(error)
-//         } finally {
-//             setLoading(false)
-//         }
-//     }
-
-//     const getReports = async () => {
-//         setLoading(true)
-//         try {
-//             const response = await getAllInterviewReport()
-//             setReports(response.interviewReport)
-//         } catch (error) {
-//             console.log(error)
-//         } finally {
-//             setLoading(false)
-//         }
-
-//     }
-
-//     // useEffect(() => {
-//     //     if (interviewId) {
-//     //         getReportById(interviewId)
-//     //     }
-//     //     else {
-//     //         getReports()
-//     //     }
-//     // }, [interviewId])
-
-//     return { loading, report, reports, generateReport, getReportById, getReports }
-// }
-
-
 
 import { useState } from "react"
-import { getAllInterviewReport, generateInterviewReport, getInterviewReportById } from "../services/interview.api"
+import { getAllInterviewReport, generateInterviewReport, getInterviewReportById ,generateResumePdf} from "../services/interview.api"
 import { useContext, useEffect } from "react"
 import { InterviewContext } from "../services/interview.context"
 import { useParams } from "react-router"
@@ -136,6 +63,24 @@ export const useInterview = () => {
         }
     }
 
+    const getResumePdf = async (interviewReportId) =>{
+        setLoading(true)
+        let response = null;
+        try{
+            response = await generateResumePdf({interviewReportId})
+            const url = window.URL.createObjectURL(new Blob([response], {type:"application/pdf"}))
+            const link = document.createElement("a")
+            link.href = url;
+            link.setAttribute("download",`resume_${interviewReportId}.pdf`)
+            document.body.appendChild(link)
+            link.click()
+        } catch (error){
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     // Load data based on route
     useEffect(() => {
         if (interviewId) {
@@ -143,5 +88,5 @@ export const useInterview = () => {
         } 
     }, [interviewId])
 
-    return { loading, report, reports, generateReport, getReportById, getReports }
+    return { loading, report, reports, generateReport, getReportById, getReports,getResumePdf  }
 }

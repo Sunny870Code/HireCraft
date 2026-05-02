@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import Navbar from "./Navbar";
+
 
 
 const Register = () => {
@@ -26,7 +28,7 @@ const Register = () => {
         e.preventDefault();
         await handleRegister(formData);
 
-        navigate('/')
+        navigate('/home')
 
         if (loading) {
             return (<main> <h1>Loading...</h1></main>)
@@ -36,6 +38,7 @@ const Register = () => {
 
     return (
         <main>
+            <Navbar />
 
             <div className="w-full min-h-screen bg-[#FFF8EC] flex items-center justify-center">
                 <div className="w-full max-w-4xl aspect-[7.5/5] flex  
@@ -85,11 +88,11 @@ const Register = () => {
                                     placeholder="Enter password"
                                     className="border px-2 py-1.5 rounded-xl text-sm mb-4" />
 
-                                <div className="text-right">
+                                {/* <div className="text-right">
                                     <Link to="/" className="text-sm text-[#546B41] font-semibold hover:underline">
                                         Generate random password
                                     </Link>
-                                </div>
+                                </div> */}
 
                                 <button
                                     type="submit"
