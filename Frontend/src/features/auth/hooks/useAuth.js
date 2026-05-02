@@ -16,6 +16,7 @@ export function useAuth() {
             setuser(data.user);
         } catch (err) {
             console.log(err)
+            return null
         } finally {
             setLoading(false);
         }
