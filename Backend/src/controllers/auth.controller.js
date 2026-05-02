@@ -50,7 +50,12 @@ const registerUserController = async (req, res) => {
         { expiresIn: "1d" }
     )
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,      // Must be true for cross-site cookies
+        sameSite: "none",  // Must be "none" for cross-site cookies
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    })
 
     res.status(201).json({
         message: "User Register successfully.",
@@ -97,13 +102,18 @@ const loginUserController = async (req, res) => {
         { expiresIn: "1d" }
     )
 
-    res.cookie("token",token);
+    res.cookie("token", token,{
+    httpOnly: true,
+    secure: true,      // Must be true for cross-site cookies
+    sameSite: "none",  // Must be "none" for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+});
     res.status(200).json({
-        message:"User loggedIn Successfully",
-        user:{
-            id:user._id,
-            username:user.username,
-            email:user.email
+        message: "User loggedIn Successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
         }
     })
 }
@@ -115,19 +125,19 @@ const loginUserController = async (req, res) => {
  * @access public 
  */
 
-const logoutUserController = async(req,res) =>{
+const logoutUserController = async (req, res) => {
     const token = req.cookies.token;
-    
-    if(token){
-        await tokenBlacklistModel.create({token})
+
+    if (token) {
+        await tokenBlacklistModel.create({ token })
     }
 
     res.clearCookie("token");
 
     res.status(200).json({
-        message:"User logged out Successfully"
+        message: "User logged out Successfully"
     })
-}  
+}
 
 /**
  * 
@@ -137,20 +147,20 @@ const logoutUserController = async(req,res) =>{
  * 
  */
 
-async function getmeController(req,res){
-    if(!req.user){
+async function getmeController(req, res) {
+    if (!req.user) {
         return res.status(401).json({
-            message:"Not authenticated"
+            message: "Not authenticated"
         });
     }
-    const user  = await userModel.findById(req.user.id)
+    const user = await userModel.findById(req.user.id)
 
     res.status(200).json({
-        message:"user details fetch successfully",
-        user:{
-            id:user._id,
-            username:user.username,
-            email:user.email
+        message: "user details fetch successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
         }
     })
 
@@ -158,4 +168,4 @@ async function getmeController(req,res){
 
 
 
-module.exports = { registerUserController , loginUserController , logoutUserController,getmeController}
+module.exports = { registerUserController, loginUserController, logoutUserController, getmeController }
