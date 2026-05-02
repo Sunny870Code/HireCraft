@@ -7,7 +7,7 @@ const LogIn = () => {
     const navigate = useNavigate();
 
     //using custom hook
-    const {loading , handleLogin} = useAuth();
+    const { loading, handleLogin } = useAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -21,14 +21,20 @@ const LogIn = () => {
         })
     }
 
-    const handleSubmit =async(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleLogin(formData);
-        navigate('/home')
+        const result = await handleLogin(formData);
+
+        if (result) {
+            navigate('/home')
+        } else {
+            console.error("LogIn failed.")
+        }
+
 
     }
 
-    if(loading){
+    if (loading) {
         return (<main><h1>Loading...</h1></main>)
     }
 

@@ -26,9 +26,15 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleRegister(formData);
+        const result=await handleRegister(formData);
 
-        navigate('/home')
+        if(result){
+            navigate('/home')
+        } else{
+            console.error("Registration failed. Staying on page.");
+            alert("Registration failed")
+        }
+        
 
         if (loading) {
             return (<main> <h1>Loading...</h1></main>)
