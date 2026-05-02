@@ -47,25 +47,25 @@ export function useAuth() {
         setLoading(false);
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const getAndSetUser = async () => {
-            try {
-                const data = await getMe();
-                if (data && data.user) {
-                    setuser(data.user);
-                }
-            } catch (err) {
-                // 401 is normal if not logged in; just keep user as null
-                console.warn("User not authenticated");
-                setuser(null);
-            } finally {
-                setLoading(false); // Stop the spinner regardless
-            }
-        };
+    //     const getAndSetUser = async () => {
+    //         try {
+    //             const data = await getMe();
+    //             if (data && data.user) {
+    //                 setuser(data.user);
+    //             }
+    //         } catch (err) {
+    //             // 401 is normal if not logged in; just keep user as null
+    //             console.warn("User not authenticated");
+    //             setuser(null);
+    //         } finally {
+    //             setLoading(false); // Stop the spinner regardless
+    //         }
+    //     };
 
-        getAndSetUser();
-    }, [])
+    //     getAndSetUser();
+    // }, [])
 
     return { user, loading, handleLogin, handleRegister, handleLogout }
 }

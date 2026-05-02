@@ -8,18 +8,40 @@ export const AuthProvider = ({ children }) => {
     const [user, setuser] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const getAndSetUser = async () => {
+    // useEffect(() => {
+    //     const getAndSetUser = async () => {
 
+    //         try {
+    //             const data = await getMe();
+    //             setuser(data.user)
+    //         } catch (err) {
+    //             setuser(null);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+
+    //     getAndSetUser();
+    // }, [])
+
+    useEffect(() => {
+
+        const getAndSetUser = async () => {
             try {
                 const data = await getMe();
-                setuser(data.user)
+                if (data && data.user) {
+                    setuser(data.user);
+                }
             } catch (err) {
+                // 401 is normal if not logged in; just keep user as null
+                if (err.response?.status !== 401) {
+                    console.error("Auth check error:", err);
+                }
                 setuser(null);
             } finally {
-                setLoading(false);
+                setLoading(false); 
             }
-        }
+        };
 
         getAndSetUser();
     }, [])

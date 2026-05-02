@@ -6,12 +6,12 @@ import { useAuth } from "../hooks/useAuth";
 
 
 const Navbar = () => {
-    
+
     const [showNav, setShowNav] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
-    const {user, setuser, loading} = useContext(AuthContext)
-    const {handleLogout} = useAuth()
+    const { user, setuser, loading } = useContext(AuthContext)
+    const { handleLogout } = useAuth()
 
     const navigate = useNavigate();
 
@@ -85,7 +85,7 @@ const Navbar = () => {
                                 </button>
                             </Link>
                             <button
-                                onClick={handleLogoutButton }
+                                onClick={handleLogoutButton}
                                 className="px-4 py-2 border border-red-400 text-red-400 rounded-md hover:bg-red-500 hover:text-white active:scale-95">
                                 Logout
                             </button>

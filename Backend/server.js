@@ -5,6 +5,7 @@ const {generateInterviewReport} = require("./src/services/ai.service")
 const {resume ,selfDescription, jobDescription } = require("./src/services/temp");
 const cors = require('cors');
 
+const PORT = process.env.PORT || 5000 || 3000;
 app.use(cors({
     origin: "https://hire-craft-five.vercel.app", // Your exact Vercel URL from the logs
     credentials: true,

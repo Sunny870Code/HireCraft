@@ -150,9 +150,12 @@ import { useInterview } from "../hook/useInterview";
 import { useNavigate } from "react-router";
 import { Upload, FileText, User, Sparkles } from "lucide-react";
 import Navbar from "../../auth/pages/Navbar";
+import { useAuth } from "../../auth/hooks/useAuth";
+
 
 const Home = () => {
     const { loading, generateReport, reports } = useInterview();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -182,6 +185,11 @@ const Home = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!user) {
+            alert("Please login first to generate a report");
+            navigate('/login');
+            return;
+        }
 
         try {
             const result = await generateReport(formData);

@@ -17,7 +17,8 @@ export async function register({ username, email, password }) {
         return response.data;
 
     } catch (err) {
-        console.log(err);
+         console.error("Register API error:", err.response?.data || err.message);
+        throw err;
     }
 
 }
@@ -30,7 +31,8 @@ export const login = async ({ email, password }) => {
         })
         return response.data;
     } catch (err) {
-        console.log(err);
+         console.error("Login API error:", err.response?.data || err.message);
+        throw err;
     }
 }
 
