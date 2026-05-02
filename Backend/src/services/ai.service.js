@@ -178,7 +178,7 @@ Return valid JSON now.
   while (retries > 0) {
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash-lite",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -343,7 +343,7 @@ Generate the resume now.`;
   try {
     const response = await ai.models.generateContent({
 
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
