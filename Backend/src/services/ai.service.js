@@ -1,8 +1,9 @@
 const { GoogleGenAI } = require("@google/genai");
-const { z } = require("zod");
+const { z, config } = require("zod");
 const { zodToJsonSchema } = require("zod-to-json-schema");
 const { jobDescription, resume, selfDescription } = require("./temp");
-
+const puppeteer = require("puppeteer");
+// const { response, response } = require("express");
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -76,67 +77,6 @@ const interviewReportSchema = z.object({
 
 async function generateInterviewReport({ resume, selfdescription, jobdescription }) {
 
-
-  //   const prompt = `
-  // You are an expert technical interviewer and career coach.
-
-  // Analyze the candidate's resume, self-description, and job description provided below to generate a tailored interview report.
-
-  // -----------------------
-  // Resume:
-  // ${resume}
-
-  // Self Description:
-  // ${selfdescription}
-
-  // Job Description:
-  // ${jobdescription}
-  // -----------------------
-
-  // Return ONLY valid JSON matching this structure:
-
-  // {
-  //   "matchScore": 75,
-  //   "technicalQuestions": [
-  //     {
-  //       "question": "Question text here",
-  //       "intention": "Interviewer's goal here",
-  //       "answer": "Detailed answer guide here"
-  //     }
-  //   ],
-  //   "behavioralQuestion": [
-  //     {
-  //       "question": "Question text here",
-  //       "intention": "Interviewer's goal here",
-  //       "answer": "STAR method guide here"
-  //     }
-  //   ],
-  //   "skillGap": [
-  //     {
-  //       "skill": "Missing skill name",
-  //       "severity": "low/medium/high"
-  //     }
-  //   ],
-  //   "preparationPlan": [
-  //     {
-  //       "day": 1,
-  //       "focus": "Topic focus",
-  //       "tasks": ["Task 1", "Task 2"]
-  //     }
-  //   ]
-  // }
-
-  // Rules:
-  // - Generate real content based on the provided Resume and Job Description.
-  // - Output ONLY valid JSON.
-  // - No extra fields, no markdown backticks, and no conversational explanation.
-  // - The key "preparationPlan" must be spelled exactly as shown (with an 'a').
-  // - All arrays must contain objects as defined in the schema.
-  // - matchScore must be an integer between 0–100.
-
-
-  // Do NOT return string arrays.
-  // `;
 
   const prompt = `
 You are an expert technical interviewer, hiring manager, and career coach.
@@ -255,7 +195,7 @@ Return valid JSON now.
         retries--;
       }
       else if (error.status === 429) {
-        throw new Error("Gemini quota exceeded. Try later.");
+        throw new Error("Gemini quota exceeded 1. Try later.");
         retries--;
       } else {
         throw error;
@@ -265,5 +205,171 @@ Return valid JSON now.
   }
 }
 
+async function generatePdfFromHTML(htmlContent) {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(htmlContent, { waitUntil: "networkidle0" })
 
-module.exports = generateInterviewReport;
+  const pdfBuffer = await page.pdf({ format: "A4", margin:{
+    top: "20mm",
+    bottom: "20mm",
+    left: "15mm",
+    right: "15mm"
+  } })
+  await browser.close()
+  return pdfBuffer
+}
+
+
+async function generateResumepdf({ resume, selfDescription, jobDescription }) {
+  const resumepdfSchema = z.object({
+    html: z.string().describe("THE HTML content of the resume which can be converted to pdf using any library like puppeteer")
+
+  })
+
+
+  const prompt = `You are an expert resume writer, ATS optimization specialist, and hiring manager.
+
+Your task is to generate a highly professional, ATS-friendly resume in clean HTML format based on the candidate's Resume, Self Description, and Job Description.
+
+----------------------------------------
+INPUT DATA:
+
+CANDIDATE RESUME:
+${resume}
+
+SELF DESCRIPTION:
+${selfDescription}
+
+JOB DESCRIPTION:
+${jobDescription}
+----------------------------------------
+
+OBJECTIVE:
+
+Create a tailored resume that maximizes the candidate’s chances of passing Applicant Tracking Systems (ATS) and impressing human recruiters.
+
+----------------------------------------
+STRICT OUTPUT FORMAT:
+
+Return ONLY valid JSON:
+
+{
+  "html": "<FULL HTML RESUME HERE>"
+}
+
+DO NOT include:
+- Markdown
+- Backticks
+- Explanations
+- Comments
+- Extra keys
+
+----------------------------------------
+HTML REQUIREMENTS:
+
+1. Use clean, semantic HTML (no external CSS or JS)
+2. Use inline styling only (minimal and professional)
+3. Structure sections clearly using:
+   - <h1>, <h2>, <p>, <ul>, <li>
+4. Ensure proper spacing, alignment, and readability
+5. Use bullet points for experience and projects
+6. Keep layout ATS-friendly (NO tables for layout, no fancy graphics)
+
+----------------------------------------
+RESUME STRUCTURE (MANDATORY):
+
+1. Header:
+   - Full Name
+   - Phone
+   - Email
+   - LinkedIn (if available)
+   - Location (optional)
+
+2. Professional Summary:
+   - 3–4 lines
+   - Tailored to job description
+   - Highlight key strengths and experience
+
+3. Skills:
+   - Categorized (e.g., Languages, Frameworks, Tools)
+   - Include keywords from job description
+
+4. Experience / Projects:
+   - Use bullet points
+   - Each point must:
+     - Start with action verbs (Built, Developed, Optimized, etc.)
+     - Include measurable impact where possible
+     - Align with job requirements
+
+5. Education
+
+6. Additional Sections (if relevant):
+   - Certifications
+   - Achievements
+
+----------------------------------------
+ATS OPTIMIZATION RULES:
+
+1. Include relevant keywords from the job description naturally
+2. Avoid keyword stuffing
+3. Use standard section headings (e.g., "Skills", "Experience")
+4. Avoid images, icons, or complex layouts
+5. Use simple fonts and formatting
+6. Ensure content is machine-readable
+
+----------------------------------------
+QUALITY RULES:
+
+1. Content must feel human-written, not AI-generated
+2. Avoid generic phrases like "hardworking", "team player"
+3. Be specific and concrete
+4. Match tone to candidate experience level (fresher vs experienced)
+5. Highlight real strengths from input data
+6. content must be ATS friendly without loosing the information.
+7. The resume should not be lengthy , try to finish it on 1 page or max 2 page, for fresher 1 page is ideal.
+
+----------------------------------------
+IMPORTANT:
+
+- If candidate is a fresher, focus on projects, skills, and learning ability
+- If experienced, emphasize impact and achievements
+- Do NOT hallucinate unrealistic experience
+
+----------------------------------------
+
+Generate the resume now.`;
+  let retries = 3;
+  try {
+    const response = await ai.models.generateContent({
+
+      model: "gemini-2.5-flash-lite",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: zodToJsonSchema(resumepdfSchema)
+      }
+    })
+
+    const jsonContent = JSON.parse(response.text)
+
+    const pdfBuffer = await generatePdfFromHTML(jsonContent.html)
+    return pdfBuffer;
+  } catch (error) {
+    if (error.status === 503 && retries > 1) {
+      console.log("Model busy... retrying");
+      await new Promise((res) => setTimeout(res, 3000));
+      retries--;
+    }
+    else if (error.status === 429) {
+      throw new Error("Gemini quota exceeded 2. Try later.");
+      retries--;
+    } else {
+      throw error;
+    }
+  }
+
+}
+
+
+module.exports = { generateInterviewReport, generateResumepdf };

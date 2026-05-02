@@ -23,7 +23,7 @@ export const generateInterviewReport =  async({jobDescription ,selfDescription ,
             "Content-Type":"multipart/form-data"
         }
     })
-
+    console.log('API Response:', response.data)
     return response.data
 }
 
@@ -46,7 +46,7 @@ export const getInterviewReportById = async (interviewId) =>{
  */
 
 export const getAllInterviewReport =async (interviewId) =>{
-    const response = await api.get(`/api/interview/`)
+    const response = await api.get(`/api/interview/allreport`)
 
     return response.data
 }

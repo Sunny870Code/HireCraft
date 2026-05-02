@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
             <Home />
     },
     {
+        path :"/interview/:interviewId",
+         element: <Interview />
+    },
+    {
         path:"/main",
         element:<Interview />
     }

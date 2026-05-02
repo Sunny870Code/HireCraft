@@ -1,5 +1,5 @@
 const pdfParse = require("pdf-parse")
-const generateInterviewReport = require("../services/ai.service")
+const { generateInterviewReport, generateResumepdf } = require("../services/ai.service")
 const interviewReportModel = require("../models/interviewReport.model");
 
 
@@ -58,21 +58,30 @@ async function generateInterviewReportController(req, res) {
  * @description Controller to get all interview report
  */
 
-async function getInterviewReportByIdController(req,res) {
-    const {interviewId} = req.params
+async function getInterviewReportByIdController(req, res) {
+    try {
+        const { interviewId } = req.params
 
-    const interviewReport = await interviewReportModel.findOne({_id: interviewId,user: req.user.id})
+        const interviewReport = await interviewReportModel.findOne({ _id: interviewId, user: req.user.id })
 
-    if(!interviewReport){
-        return res.status(404).json({
-            message:"Interview report not found"
+        if (!interviewReport) {
+            return res.status(404).json({
+                message: "Interview report not found"
+            })
+        }
+
+        res.status(200).json({
+            message: "INterview report fetched successfully.",
+            interviewReport
         })
+    } catch (error) {
+        console.error("Controller Error:", error.message);
+
+        res.status(500).json({
+            message: error.message || "Something went wrong"
+        });
     }
 
-    res.status(200).json({
-        message:"INterview report fetched successfully.",
-        interviewReport
-    })
 }
 
 
@@ -80,9 +89,55 @@ async function getInterviewReportByIdController(req,res) {
  * 
  * @description Controller to get all interview report
  */
-async function getAllInterviewReportsController(req,res){
-    const interviewReports = await interviewReportModel.find({user: req.user.id}).sort({createdAt:-1}).select("-resume -selfDescription -jobDescription -_v -technicalQuestions -behavioralQuestion -skillGaps -preperationPlan")
+async function getAllInterviewReportsController(req, res) {
+    try {
+        const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -_v -technicalQuestions -behavioralQuestion -skillGaps -preperationPlan")
+
+    } catch (error) {
+        console.error("Controller Error:", error.message);
+
+        res.status(500).json({
+            message: error.message || "Something went wrong"
+        });
+    }
 }
 
+/**
+ * 
+ * @description Controller to generate resume pdf based on user self description , resume and job description.
+*/
+async function generateResumePdfController(req, res) {
 
-module.exports = { generateInterviewReportController , getInterviewReportByIdController, getAllInterviewReportsController};
+    try {
+        const { interviewReportId } = req.params
+
+        const interviewReport = await interviewReportModel.findById(interviewReportId)
+
+        if (!interviewReport) {
+            return res.status(404).json({
+                message: "Interview report not found"
+            })
+        }
+
+        const { resume, selfDescription, jobDescription } = interviewReport
+
+        const pdfBuffer = await generateResumepdf({ resume, selfDescription, jobDescription })
+
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": `attachment; filename=resume_$(interviewReportId).pdf`
+        })
+
+        res.send(pdfBuffer)
+    } catch (error) {
+        console.error("Controller Error:", error.message);
+
+        res.status(500).json({
+            message: error.message || "Something went wrong"
+        });
+    }
+
+
+}
+
+module.exports = { generateInterviewReportController, getInterviewReportByIdController, getAllInterviewReportsController, generateResumePdfController };

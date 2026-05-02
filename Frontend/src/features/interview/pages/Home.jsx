@@ -3,7 +3,7 @@ import { useInterview } from "../hook/useInterview";
 import { useNavigate } from "react-router";
 
 const Home = () => {
-    const { loading, generateReport } = useInterview();
+    const { loading, generateReport, reports } = useInterview();
     const navigate = useNavigate();
 
     // 1. Initialize state for two-way binding
@@ -31,20 +31,45 @@ const Home = () => {
     };
 
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
 
-        
+
+    //     const result = await generateReport(formData);
+    //     console.log(result)
+    //     if (result) {
+    //         navigate(`/interview/${result._id}`);
+    //     } else {
+    //         alert("Failed to generate report");
+    //     }
+
+    // };
+const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
         const result = await generateReport(formData);
-        console.log(result)
+        console.log('Submit result:', result);
+        
         if (result) {
-            navigate("/main");
+            // Check which ID field exists
+            const reportId = result._id || result.id;
+            
+            if (reportId) {
+                console.log("hello")
+                navigate(`/interview/${reportId}`);
+            } else {
+                console.error('No ID in result:', result);
+                alert("Report generated but missing ID");
+            }
         } else {
             alert("Failed to generate report");
         }
-
-    };
-
+    } catch (error) {
+        console.error('Submit error:', error);
+        alert("Error: " + error.message);
+    }
+};
     return (
         <main className="w-full min-h-screen bg-[#355872] flex items-center justify-center">
             <section className="w-full max-w-4xl aspect-[7.5/5] flex flex-col items-center justify-center 
@@ -103,6 +128,13 @@ const Home = () => {
                     </button>
                 </div>
 
+            </section>
+
+            {/* Add a section to show existing reports fetched by useEffect */}
+            <section className="existing-reports">
+                {reports && reports.length > 0 && reports.map(rep => (
+                    <div key={rep._id}>{rep.title}</div>
+                ))}
             </section>
         </main>
     );

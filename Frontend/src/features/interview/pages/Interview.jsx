@@ -1,49 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import {
     FileText, MessageSquare, BookOpen, AlertCircle,
     CheckCircle2, Target, Briefcase, GraduationCap, Map
 } from 'lucide-react';
 
 import { useInterview } from '../hook/useInterview';
+import { useNavigate,useParams } from 'react-router';
 
 const InterviewDashboard = () => {
-    // Your exact JSON Data Structure
-    // const report = {
-    //     "matchScore": 85,
-    //     "jobDescription": "We are looking for a MERN Stack Developer with strong knowledge of JavaScript, React, Node.js, and MongoDB...",
-    //     "resume": "Kunal Pawar\n sunnypawar870@gmail.com...",
-    //     "technicalQuestions": [
-    //         "Describe the architecture of your Music Streaming Platform.",
-    //         "How did you handle user authentication and authorization?",
-    //         "Explain role management in your TaskSync project.",
-    //         "Discuss trade-offs between MongoDB and MySQL."
-    //     ],
-    //     "behavioralQuestion": [
-    //         "Tell me about a challenging technical problem you encountered.",
-    //         "Describe a time you worked effectively in a team.",
-    //         "Give an example of learning a new technology quickly."
-    //     ],
-    //     "skillGap": [
-    //         "Cloud Deployment (AWS, Azure, GCP)",
-    //         "CI/CD Pipelines",
-    //         "API Security Best Practices",
-    //         "Unit/Integration Testing"
-    //     ],
-    //     "preparationPlan": [
-    //         "Day 1: Deep dive into MERN stack. Review core concepts of React (Hooks, Context API), Node.js (Express middleware, request lifecycle), MongoDB (Mongoose schemas, queries), and API design principles.",
-    //         "Day 2: Focus on Data Structures & Algorithms. Practice LeetCode problems, focusing on medium-level questions. Be ready to explain time and space complexity for common algorithms.",
-    //         "Day 3: Project deep dive. Prepare to discuss your Music Streaming Platform and TaskSync projects in detail. Focus on architectural decisions, challenges faced, and solutions implemented. Revisit the specific technologies used (Multer, ImageKit, Axios).",
-    //         "Day 4: Behavioral and Situational Questions. Prepare STAR method answers for common questions related to teamwork, problem-solving, learning, and handling failures. Think about specific examples from your projects.",
-    //         "Day 5: Mock Interview and Skill Gap Improvement. Practice answering technical and behavioral questions. Spend time researching cloud deployment options and basic CI/CD concepts, and how you would implement them for your projects."
-    //     ]
-    // };
-    const { report, loading } = useInterview();
+   const [activeTab, setActiveTab] = useState('roadmap');
+    const { report, loading ,getReportById} = useInterview();
+    const {interviewId} = useParams()
 
-    if (loading) return <div>Loading...</div>;
 
-    if (!report) return <div>No report found</div>;
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#FFF8EC]">
+                <div className="text-[#546B41] text-xl">Loading report...</div>
+            </div>
+        );
+    }
 
-    const [activeTab, setActiveTab] = useState('roadmap');
+    if (!report) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#FFF8EC]">
+                <div className="text-[#546B41] text-xl">No report found</div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex font-sans" style={{ backgroundColor: '#FFF8EC', color: '#546B41' }}>
